@@ -2,15 +2,23 @@ package com.utp.proyectoBackend.ProyectoBackendClinica.models.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "consulta")
 public class Consulta implements Serializable {
+
+    @Id
+    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
      // Motivo de Consulta
      @Column(name = "motivo_consulta", length = 600)
@@ -39,8 +47,8 @@ public class Consulta implements Serializable {
      @Column( length = 600)
      private String conducta;
 
-     @ManyToOne()
-     @JoinColumn(name = "id")
+     //  @JoinColumn(name = "id")
+     @ManyToOne(cascade = CascadeType.ALL)
      private Paciente paciente;
 
     public String getMotivoConsulta() {
