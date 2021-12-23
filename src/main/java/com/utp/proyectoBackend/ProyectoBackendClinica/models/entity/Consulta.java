@@ -1,15 +1,20 @@
 package com.utp.proyectoBackend.ProyectoBackendClinica.models.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "consulta")
@@ -20,6 +25,14 @@ public class Consulta implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Column(name = "created_at")
+    @Temporal(TemporalType.DATE)
+    private Date createAt;
+
+    @PrePersist
+    public void prePersist() {
+        createAt = new Date();
+    }
      // Motivo de Consulta
      @Column(name = "motivo_consulta", length = 600)
      private String motivoConsulta;
@@ -47,8 +60,7 @@ public class Consulta implements Serializable {
      @Column( length = 600)
      private String conducta;
 
-     //  @JoinColumn(name = "id")
-     @ManyToOne(cascade = CascadeType.ALL)
+     @ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.EAGER)
      private Paciente paciente;
 
     public String getMotivoConsulta() {
@@ -121,5 +133,21 @@ public class Consulta implements Serializable {
 
     public void setPaciente(Paciente paciente) {
         this.paciente = paciente;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getCreatedAt() {
+        return createAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createAt = createdAt;
     }
 }

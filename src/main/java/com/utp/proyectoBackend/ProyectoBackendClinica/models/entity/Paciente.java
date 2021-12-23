@@ -49,9 +49,6 @@ public class Paciente implements Serializable {
     private String confiabilidad;
     private String servicio;
     private String lugar;
-
-    @ManyToOne()
-    private Consulta consulta;
    
 
     // Getters y Setters
