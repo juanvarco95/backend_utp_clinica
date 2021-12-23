@@ -1,0 +1,11 @@
+{
+    "motivo_consulta": "Algo",
+    "patologicos_personales" : "Algo",
+    "toxicos_personales" : "Algo",
+    "alergicos_personales" : "Algo",
+    "farmacologicos_personales" : "Algo",
+    "patologicos_familiares" : "Algo",
+    "diagnostico" : "algo",
+    "conducta" : "algo",
+    "paciente_id" : 1
+}

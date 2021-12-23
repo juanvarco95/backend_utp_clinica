@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -21,17 +20,22 @@ public class Paciente implements Serializable {
 
     private String nombre;
     private String apellido;
+
+    @Column(name = "tipo_documento")
     private String tipoDocumento;
 
     @Column(nullable = false, unique = true)
     private Long documento;
 
     private Date fechaNacimiento;
+    @Column(name = "lugar_nacimiento")
     private String lugarNacimiento;
     private String genero;
 
     @Column(name = "ocupacion_hobbies", length = 300)
     private String ocupacionHobbies;
+    
+    @Column(name = "estado_civil")
     private String estadoCivil;
     private String religion;
 
@@ -43,8 +47,9 @@ public class Paciente implements Serializable {
     
     @Column(name = "tipo_sangre")
     private String tipoSangre;
-
+    
     private String EPS;
+    @Column(name = "acompanate_telefono")
     private Long acompañanteTelefono;
     private String confiabilidad;
     private String servicio;

@@ -1,0 +1,20 @@
+{
+    "nombre": "Juan",
+    "apellido": "Vargas",
+    "tipo_documento": "CC",
+    "documento": 1088331288,
+    "fecha_nacimiento": "1995-11-16",
+    "lugar_nacimiento": "Pereira",
+    "genero": "Masculino",
+    "ocupacion_hobbies": "Jugar",
+    "estado_civil": "Soltero",
+    "religion" : "Catolico",
+    "lugar_procedencia" : "Pereira",
+    "lugar_residencia" : "Pereira",
+    "tipo_sangre" : "B+",
+    "eps" : "S.O.S",
+    "acompañante_telefono" : 3128178269,
+    "confiabilidad" : "Si",
+    "servicio" : "Bueno",
+    "lugar" : "Pereira"
+}

@@ -3,6 +3,7 @@ package com.utp.proyectoBackend.ProyectoBackendClinica.models.services;
 import java.util.List;
 
 import com.utp.proyectoBackend.ProyectoBackendClinica.models.dao.IPacienteDao;
+import com.utp.proyectoBackend.ProyectoBackendClinica.models.entity.Consulta;
 import com.utp.proyectoBackend.ProyectoBackendClinica.models.entity.Paciente;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class PacienteServiceImpl implements IPacienteService {
     public void delete(Long id) {
         pacienteDao.deleteById(id);        
     }
+
 
     
     

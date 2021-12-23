@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.utp.proyectoBackend.ProyectoBackendClinica.models.entity.Consulta;
 import com.utp.proyectoBackend.ProyectoBackendClinica.models.entity.Paciente;
+import com.utp.proyectoBackend.ProyectoBackendClinica.models.services.IConsultaService;
 import com.utp.proyectoBackend.ProyectoBackendClinica.models.services.IPacienteService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +30,17 @@ public class PacienteRestController {
     @Autowired
     private IPacienteService pacienteService;
 
+    @Autowired
+    private IConsultaService consultaService;
+
     @GetMapping("/pacientes")
     public List<Paciente> index() {
         return pacienteService.findAll();
+    }
+
+    @GetMapping("/consultas")
+    public List<Consulta> indexConultas() {
+        return consultaService.findAll();
     }
 
     @GetMapping("/pacientes/{id}")
@@ -53,7 +63,28 @@ public class PacienteRestController {
         
         return new ResponseEntity<Paciente>(paciente, HttpStatus.OK);
     }
-    
+
+    @GetMapping("/pacientes/{id_p}/consultas/{id_c}")
+    public ResponseEntity<?> showConsulta(@PathVariable Long id_p, @PathVariable Long id_c) {
+        Consulta consulta = null;
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            this.show(id_p);
+            consulta = consultaService.findById(id_c);
+        } catch (DataAccessException e) {
+            response.put("error", "Error al hacer la consulta en la base de datos.");
+            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+        if(consulta == null) {
+            response.put("mensaje", "La consulta ID: ".concat(id_c.toString().concat("no existe en la base de datos!")));
+        }
+        
+        return new ResponseEntity<Consulta>(consulta, HttpStatus.OK);
+    }
     @PostMapping("/pacientes")
     public ResponseEntity<?> create(@RequestBody Paciente paciente) {
         Map<String, Object> response = new HashMap<>();
@@ -67,6 +98,21 @@ public class PacienteRestController {
         }
         
         return new ResponseEntity<Paciente>(paciente, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/pacientes/{id}/consultas")
+    public ResponseEntity<?> createConsulta(@RequestBody Consulta consulta, @PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            consulta = consultaService.save(consulta);
+        } catch (DataAccessException e) {
+            response.put("error", "Error al hacer la consulta en la base de datos.");
+            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+        return new ResponseEntity<Consulta>(consulta, HttpStatus.CREATED);
     }
     
     @PutMapping("/pacientes/id")
