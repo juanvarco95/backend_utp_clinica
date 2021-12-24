@@ -27,6 +27,7 @@ public class Paciente implements Serializable {
     @Column(nullable = false, unique = true)
     private Long documento;
 
+    @Column(name = "fecha_nacimiento")
     private Date fechaNacimiento;
     @Column(name = "lugar_nacimiento")
     private String lugarNacimiento;
@@ -50,7 +51,7 @@ public class Paciente implements Serializable {
     
     private String EPS;
     @Column(name = "acompanate_telefono")
-    private Long acompañanteTelefono;
+    private Long acompananteTelefono;
     private String confiabilidad;
     private String servicio;
     private String lugar;
@@ -179,11 +180,11 @@ public class Paciente implements Serializable {
     }
 
     public Long getAcompañanteTelefono() {
-        return acompañanteTelefono;
+        return acompananteTelefono;
     }
 
     public void setAcompañanteTelefono(Long acompañanteTelefono) {
-        this.acompañanteTelefono = acompañanteTelefono;
+        this.acompananteTelefono = acompañanteTelefono;
     }
 
     public String getConfiabilidad() {
