@@ -50,8 +50,9 @@ public class Paciente implements Serializable {
     private String tipoSangre;
     
     private String EPS;
-    @Column(name = "acompanate_telefono")
+    @Column(name = "acompanante_telefono")
     private Long acompananteTelefono;
+
     private String confiabilidad;
     private String servicio;
     private String lugar;

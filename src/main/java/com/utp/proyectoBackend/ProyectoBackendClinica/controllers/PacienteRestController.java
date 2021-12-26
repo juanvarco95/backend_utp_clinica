@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.utp.proyectoBackend.ProyectoBackendClinica.models.entity.Consulta;
 import com.utp.proyectoBackend.ProyectoBackendClinica.models.entity.Paciente;
-import com.utp.proyectoBackend.ProyectoBackendClinica.models.services.IConsultaService;
 import com.utp.proyectoBackend.ProyectoBackendClinica.models.services.IPacienteService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,18 +31,91 @@ public class PacienteRestController {
     @Autowired
     private IPacienteService pacienteService;
 
-    @Autowired
-    private IConsultaService consultaService;
+    // @Autowired
+    // private IConsultaService consultaService;
 
     @GetMapping("/pacientes")
     public List<Paciente> index() {
         return pacienteService.findAll();
     }
+    
+    @PutMapping("/pacientes/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Paciente update(@RequestBody Paciente paciente, @PathVariable Long id) {
+        Paciente pacienteActual = this.pacienteService.findById(id);
 
-    @GetMapping("/consultas")
-    public List<Consulta> indexConultas() {
-        return consultaService.findAll();
+        pacienteActual.setNombre(paciente.getNombre());
+        pacienteActual.setApellido(paciente.getApellido());
+        pacienteActual.setTipoDocumento(paciente.getTipoDocumento());
+        pacienteActual.setDocumento(paciente.getDocumento());
+        pacienteActual.setFechaNacimiento(paciente.getFechaNacimiento());
+        pacienteActual.setLugarNacimiento(paciente.getLugarNacimiento());
+        pacienteActual.setGenero(paciente.getGenero());
+        pacienteActual.setOcupacionHobbies(paciente.getOcupacionHobbies());
+        pacienteActual.setEstadoCivil(paciente.getEstadoCivil());
+        pacienteActual.setReligion(paciente.getReligion());
+        pacienteActual.setLugarProcedencia(paciente.getLugarProcedencia());
+        pacienteActual.setLugarResidencia(paciente.getLugarResidencia());
+        pacienteActual.setTipoSangre(paciente.getTipoSangre());
+        pacienteActual.setEPS(paciente.getEPS());
+        pacienteActual.setAcompañanteTelefono(paciente.getAcompañanteTelefono());
+        pacienteActual.setConfiabilidad(paciente.getConfiabilidad());
+        pacienteActual.setServicio(paciente.getServicio());
+        pacienteActual.setLugar(paciente.getLugar());
+
+        this.pacienteService.save(pacienteActual);
+        return pacienteActual;
     }
+
+    @DeleteMapping("/pacientes/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        Paciente pacienteActual = this.pacienteService.findById(id);
+        this.pacienteService.delete(pacienteActual);
+    }
+
+    
+
+    @PostMapping("/pacientes")
+    public ResponseEntity<?> create(@RequestBody Paciente paciente) {
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            paciente = pacienteService.save(paciente);
+        } catch (DataAccessException e) {
+            response.put("error", "Error al hacer la consulta en la base de datos.");
+            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+        return new ResponseEntity<Paciente>(paciente, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/pacientes/{id}")
+    public ResponseEntity<?> show(@PathVariable Long id) {
+        Paciente paciente = null;
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            paciente = pacienteService.findById(id);
+        } catch (DataAccessException e) {
+            response.put("error", "Error al hacer la consulta en la base de datos.");
+            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+        if(paciente == null) {
+            response.put("mensaje", "El paciente ID: ".concat(id.toString().concat("no existe en la base de datos!")));
+        }
+        
+        return new ResponseEntity<Paciente>(paciente, HttpStatus.OK);
+    }
+
+    // @GetMapping("/consultas")
+    // public List<Consulta> indexConultas() {
+    //     return consultaService.findAll();
+    // }
 
     // @GetMapping("/pacientes/{id}")
     // public Paciente show(@PathVariable Long id) {
@@ -93,129 +165,61 @@ public class PacienteRestController {
     // }
 
 
-    @GetMapping("/pacientes/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id) {
-        Paciente paciente = null;
-        Map<String, Object> response = new HashMap<>();
+   
 
-        try {
-            paciente = pacienteService.findById(id);
-        } catch (DataAccessException e) {
-            response.put("error", "Error al hacer la consulta en la base de datos.");
-            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
-            
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    // @GetMapping("/pacientes/{id_p}/consultas/{id_c}")
+    // public ResponseEntity<?> showConsulta(@PathVariable Long id_p, @PathVariable Long id_c) {
+    //     Consulta consulta = null;
+    //     Map<String, Object> response = new HashMap<>();
         
-        if(paciente == null) {
-            response.put("mensaje", "El paciente ID: ".concat(id.toString().concat("no existe en la base de datos!")));
-        }
-        
-        return new ResponseEntity<Paciente>(paciente, HttpStatus.OK);
-    }
-
-    @GetMapping("/pacientes/{id_p}/consultas/{id_c}")
-    public ResponseEntity<?> showConsulta(@PathVariable Long id_p, @PathVariable Long id_c) {
-        Consulta consulta = null;
-        Map<String, Object> response = new HashMap<>();
-        
-        try {
-            this.show(id_p);
-            consulta = consultaService.findById(id_c);
-        } catch (DataAccessException e) {
-            response.put("error", "Error al hacer la consulta en la base de datos.");
-            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
-            
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        
-        if(consulta == null) {
-            response.put("mensaje", "La consulta ID: ".concat(id_c.toString().concat("no existe en la base de datos!")));
-        }
-        
-        return new ResponseEntity<Consulta>(consulta, HttpStatus.OK);
-    }
-    @PostMapping("/pacientes")
-    public ResponseEntity<?> create(@RequestBody Paciente paciente) {
-        Map<String, Object> response = new HashMap<>();
-        
-        try {
-            paciente = pacienteService.save(paciente);
-        } catch (DataAccessException e) {
-            response.put("error", "Error al hacer la consulta en la base de datos.");
-            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        
-        return new ResponseEntity<Paciente>(paciente, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/pacientes/{id}/consultas")
-    public ResponseEntity<?> createConsulta(@RequestBody Consulta consulta, @PathVariable Long id) {
-        Map<String, Object> response = new HashMap<>();
-        
-        try {
-           
-            consulta = consultaService.save(consulta);
-        } catch (DataAccessException e) {
-            response.put("error", "Error al hacer la consulta en la base de datos.");
-            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        
-        return new ResponseEntity<Consulta>(consulta, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/pacientes/{id}/consultas/{id_c}")
-    public Consulta updateConsulta(@RequestBody Consulta consulta, @PathVariable Long id){
-
-        Consulta consultaActual = this.consultaService.findById(id);
-
-        consultaActual.setMotivoConsulta(consulta.getMotivoConsulta());
-        consultaActual.setPatologicosPersonales(consulta.getPatologicosPersonales());
-        consultaActual.setToxicosPersonales(consulta.getToxicosPersonales());
-        consultaActual.setAlergicosPersonales(consulta.getAlergicosPersonales());
-        consultaActual.setFarmacologicosPersonales(consulta.getFarmacologicosPersonales());
-        consultaActual.setPatologicosFamiliares(consulta.getPatologicosFamiliares());
-        consultaActual.setDiagnostico(consulta.getDiagnostico());
-        consultaActual.setConducta(consulta.getConducta());
-
-        this.consultaService.save(consultaActual);
-        return consultaActual;
-    }
+    //     try {
+    //         this.show(id_p);
+    //         consulta = consultaService.findById(id_c);
+    //     } catch (DataAccessException e) {
+    //         response.put("error", "Error al hacer la consulta en la base de datos.");
+    //         response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
     
-    @PutMapping("/pacientes/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Paciente update(@RequestBody Paciente paciente, @PathVariable Long id) {
-        Paciente pacienteActual = this.pacienteService.findById(id);
+    //         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    //     }
+    
+    //     if(consulta == null) {
+    //         response.put("mensaje", "La consulta ID: ".concat(id_c.toString().concat("no existe en la base de datos!")));
+    //     }
+        
+    //     return new ResponseEntity<Consulta>(consulta, HttpStatus.OK);
+    // }
+   
+    // @PostMapping("/pacientes/{id}/consultas")
+    // public ResponseEntity<?> createConsulta(@RequestBody Consulta consulta, @PathVariable Long id) {
+    //     Map<String, Object> response = new HashMap<>();
+        
+    //     try {
+           
+    //         consulta = consultaService.save(consulta);
+    //     } catch (DataAccessException e) {
+    //         response.put("error", "Error al hacer la consulta en la base de datos.");
+    //         response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+    //         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    //     }
+        
+    //     return new ResponseEntity<Consulta>(consulta, HttpStatus.CREATED);
+    // }
 
-        pacienteActual.setNombre(paciente.getNombre());
-        pacienteActual.setApellido(paciente.getApellido());
-        pacienteActual.setTipoDocumento(paciente.getTipoDocumento());
-        pacienteActual.setDocumento(paciente.getDocumento());
-        pacienteActual.setFechaNacimiento(paciente.getFechaNacimiento());
-        pacienteActual.setLugarNacimiento(paciente.getLugarNacimiento());
-        pacienteActual.setGenero(paciente.getGenero());
-        pacienteActual.setOcupacionHobbies(paciente.getOcupacionHobbies());
-        pacienteActual.setEstadoCivil(paciente.getEstadoCivil());
-        pacienteActual.setReligion(paciente.getReligion());
-        pacienteActual.setLugarProcedencia(paciente.getLugarProcedencia());
-        pacienteActual.setLugarResidencia(paciente.getLugarResidencia());
-        pacienteActual.setTipoSangre(paciente.getTipoSangre());
-        pacienteActual.setEPS(paciente.getEPS());
-        pacienteActual.setAcompañanteTelefono(paciente.getAcompañanteTelefono());
-        pacienteActual.setConfiabilidad(paciente.getConfiabilidad());
-        pacienteActual.setServicio(paciente.getServicio());
-        pacienteActual.setLugar(paciente.getLugar());
+    // @PutMapping("/pacientes/{id}/consultas/{id_c}")
+    // public Consulta updateConsulta(@RequestBody Consulta consulta, @PathVariable Long id){
 
-        this.pacienteService.save(pacienteActual);
-        return pacienteActual;
-    }
+    //     Consulta consultaActual = this.consultaService.findById(id);
 
-    @DeleteMapping("/pacientes/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        Paciente pacienteActual = this.pacienteService.findById(id);
-        this.pacienteService.delete(pacienteActual);
-    }
+    //     consultaActual.setMotivoConsulta(consulta.getMotivoConsulta());
+    //     consultaActual.setPatologicosPersonales(consulta.getPatologicosPersonales());
+    //     consultaActual.setToxicosPersonales(consulta.getToxicosPersonales());
+    //     consultaActual.setAlergicosPersonales(consulta.getAlergicosPersonales());
+    //     consultaActual.setFarmacologicosPersonales(consulta.getFarmacologicosPersonales());
+    //     consultaActual.setPatologicosFamiliares(consulta.getPatologicosFamiliares());
+    //     consultaActual.setDiagnostico(consulta.getDiagnostico());
+    //     consultaActual.setConducta(consulta.getConducta());
+
+    //     this.consultaService.save(consultaActual);
+    //     return consultaActual;
+    // }
 }
