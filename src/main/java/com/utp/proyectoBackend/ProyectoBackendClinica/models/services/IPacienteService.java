@@ -12,7 +12,7 @@ public interface IPacienteService {
 
     public Paciente save(Paciente paciente);
 
-    public void delete(Long id);
+    public void delete(Paciente paciente);
 
     
 }

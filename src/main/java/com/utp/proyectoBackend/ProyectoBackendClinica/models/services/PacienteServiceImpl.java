@@ -17,24 +17,27 @@ public class PacienteServiceImpl implements IPacienteService {
     private IPacienteDao pacienteDao;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Paciente> findAll() {
         return (List<Paciente>) pacienteDao.findAll();
     }
-
+    
     @Override
+    @Transactional(readOnly = true)
     public Paciente findById(Long id) {
         return pacienteDao.findById(id).orElse(null);
     }
-
+    
     @Override
+    @Transactional
     public Paciente save(Paciente paciente) {
         return pacienteDao.save(paciente);
     }
-
+    
     @Override
-    public void delete(Long id) {
-        pacienteDao.deleteById(id);        
+    @Transactional
+    public void delete(Paciente paciente) {
+        pacienteDao.delete(paciente);        
     }
 
 

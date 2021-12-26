@@ -14,12 +14,14 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -42,6 +44,54 @@ public class PacienteRestController {
     public List<Consulta> indexConultas() {
         return consultaService.findAll();
     }
+
+    // @GetMapping("/pacientes/{id}")
+    // public Paciente show(@PathVariable Long id) {
+    //     return this.pacienteService.findById(id);
+    // }
+
+    // @PostMapping("/pacientes")
+    // @ResponseStatus
+    // public Paciente create(@RequestBody Paciente paciente) {
+    //     this.pacienteService.save(paciente);
+    //     return paciente;
+    // }
+
+    // @PutMapping("/pacientes/{id}")
+    // @ResponseStatus(HttpStatus.CREATED)
+    // public Paciente update(@RequestBody Paciente paciente, @PathVariable Long id) {
+    //     Paciente pacienteActual = this.pacienteService.findById(id);
+
+    //     pacienteActual.setNombre(paciente.getNombre());
+    //     pacienteActual.setApellido(paciente.getApellido());
+    //     pacienteActual.setTipoDocumento(paciente.getTipoDocumento());
+    //     pacienteActual.setDocumento(paciente.getDocumento());
+    //     pacienteActual.setFechaNacimiento(paciente.getFechaNacimiento());
+    //     pacienteActual.setLugarNacimiento(paciente.getLugarNacimiento());
+    //     pacienteActual.setGenero(paciente.getGenero());
+    //     pacienteActual.setOcupacionHobbies(paciente.getOcupacionHobbies());
+    //     pacienteActual.setEstadoCivil(paciente.getEstadoCivil());
+    //     pacienteActual.setReligion(paciente.getReligion());
+    //     pacienteActual.setLugarProcedencia(paciente.getLugarProcedencia());
+    //     pacienteActual.setLugarResidencia(paciente.getLugarResidencia());
+    //     pacienteActual.setTipoSangre(paciente.getTipoSangre());
+    //     pacienteActual.setEPS(paciente.getEPS());
+    //     pacienteActual.setAcompañanteTelefono(paciente.getAcompañanteTelefono());
+    //     pacienteActual.setConfiabilidad(paciente.getConfiabilidad());
+    //     pacienteActual.setServicio(paciente.getServicio());
+    //     pacienteActual.setLugar(paciente.getLugar());
+
+    //     this.pacienteService.save(pacienteActual);
+    //     return pacienteActual;
+    // }
+
+    // @DeleteMapping("/paciente/{id}")
+    // @ResponseStatus(HttpStatus.NO_CONTENT)
+    // public void delete(@PathVariable Long id) {
+    //     Paciente pacienteActual = this.pacienteService.findById(id);
+    //     this.pacienteService.delete(pacienteActual);
+    // }
+
 
     @GetMapping("/pacientes/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
@@ -105,6 +155,7 @@ public class PacienteRestController {
         Map<String, Object> response = new HashMap<>();
         
         try {
+           
             consulta = consultaService.save(consulta);
         } catch (DataAccessException e) {
             response.put("error", "Error al hacer la consulta en la base de datos.");
@@ -114,29 +165,57 @@ public class PacienteRestController {
         
         return new ResponseEntity<Consulta>(consulta, HttpStatus.CREATED);
     }
+
+    @PutMapping("/pacientes/{id}/consultas/{id_c}")
+    public Consulta updateConsulta(@RequestBody Consulta consulta, @PathVariable Long id){
+
+        Consulta consultaActual = this.consultaService.findById(id);
+
+        consultaActual.setMotivoConsulta(consulta.getMotivoConsulta());
+        consultaActual.setPatologicosPersonales(consulta.getPatologicosPersonales());
+        consultaActual.setToxicosPersonales(consulta.getToxicosPersonales());
+        consultaActual.setAlergicosPersonales(consulta.getAlergicosPersonales());
+        consultaActual.setFarmacologicosPersonales(consulta.getFarmacologicosPersonales());
+        consultaActual.setPatologicosFamiliares(consulta.getPatologicosFamiliares());
+        consultaActual.setDiagnostico(consulta.getDiagnostico());
+        consultaActual.setConducta(consulta.getConducta());
+
+        this.consultaService.save(consultaActual);
+        return consultaActual;
+    }
     
-    @PutMapping("/pacientes/id")
-    public ResponseEntity<?> update(@RequestBody Paciente paciente, @PathVariable Long id) {
-        Paciente pacienteActual = pacienteService.findById(id);
-        Paciente pacienteActualizado = null;
-        
-        Map<String, Object> response = new HashMap<>();
-        
-        if(pacienteActual == null) {
-            response.put("mensaje", "Error: no se pudo encontrar el cliente ID: ".concat(id.toString().concat(" no existe en la base de datos!.")));
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
-        }
+    @PutMapping("/pacientes/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Paciente update(@RequestBody Paciente paciente, @PathVariable Long id) {
+        Paciente pacienteActual = this.pacienteService.findById(id);
 
-        try {
-            pacienteActual.setNombre(paciente.getNombre());
-            pacienteActual.setApellido(paciente.getApellido());
-            
+        pacienteActual.setNombre(paciente.getNombre());
+        pacienteActual.setApellido(paciente.getApellido());
+        pacienteActual.setTipoDocumento(paciente.getTipoDocumento());
+        pacienteActual.setDocumento(paciente.getDocumento());
+        pacienteActual.setFechaNacimiento(paciente.getFechaNacimiento());
+        pacienteActual.setLugarNacimiento(paciente.getLugarNacimiento());
+        pacienteActual.setGenero(paciente.getGenero());
+        pacienteActual.setOcupacionHobbies(paciente.getOcupacionHobbies());
+        pacienteActual.setEstadoCivil(paciente.getEstadoCivil());
+        pacienteActual.setReligion(paciente.getReligion());
+        pacienteActual.setLugarProcedencia(paciente.getLugarProcedencia());
+        pacienteActual.setLugarResidencia(paciente.getLugarResidencia());
+        pacienteActual.setTipoSangre(paciente.getTipoSangre());
+        pacienteActual.setEPS(paciente.getEPS());
+        pacienteActual.setAcompañanteTelefono(paciente.getAcompañanteTelefono());
+        pacienteActual.setConfiabilidad(paciente.getConfiabilidad());
+        pacienteActual.setServicio(paciente.getServicio());
+        pacienteActual.setLugar(paciente.getLugar());
 
-        } catch (Exception e) {
-            //TODO: handle exception
-        }
-        return null;
+        this.pacienteService.save(pacienteActual);
+        return pacienteActual;
+    }
 
-
+    @DeleteMapping("/pacientes/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        Paciente pacienteActual = this.pacienteService.findById(id);
+        this.pacienteService.delete(pacienteActual);
     }
 }
