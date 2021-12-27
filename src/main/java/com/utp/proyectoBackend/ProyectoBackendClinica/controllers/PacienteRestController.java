@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.utp.proyectoBackend.ProyectoBackendClinica.models.entity.Consulta;
 import com.utp.proyectoBackend.ProyectoBackendClinica.models.entity.Paciente;
 import com.utp.proyectoBackend.ProyectoBackendClinica.models.services.IPacienteService;
 
@@ -30,9 +29,6 @@ public class PacienteRestController {
     
     @Autowired
     private IPacienteService pacienteService;
-
-    // @Autowired
-    // private IConsultaService consultaService;
 
     @GetMapping("/pacientes")
     public List<Paciente> index() {

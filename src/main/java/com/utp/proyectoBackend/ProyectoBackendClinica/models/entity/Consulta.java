@@ -60,6 +60,7 @@ public class Consulta implements Serializable {
      @Column( length = 600)
      private String conducta;
 
+    
      @ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.EAGER)
      private Paciente paciente;
 
