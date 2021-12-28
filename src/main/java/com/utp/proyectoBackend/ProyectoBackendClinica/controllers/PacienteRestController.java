@@ -54,7 +54,7 @@ public class PacienteRestController {
         pacienteActual.setLugarResidencia(paciente.getLugarResidencia());
         pacienteActual.setTipoSangre(paciente.getTipoSangre());
         pacienteActual.setEPS(paciente.getEPS());
-        pacienteActual.setAcompañanteTelefono(paciente.getAcompañanteTelefono());
+        pacienteActual.setAcompananteTelefono(paciente.getAcompananteTelefono());
         pacienteActual.setConfiabilidad(paciente.getConfiabilidad());
         pacienteActual.setServicio(paciente.getServicio());
         pacienteActual.setLugar(paciente.getLugar());

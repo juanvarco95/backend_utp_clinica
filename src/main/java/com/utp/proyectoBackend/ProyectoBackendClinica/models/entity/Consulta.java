@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
@@ -25,7 +26,7 @@ public class Consulta implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "created_at")
+    @Column(name = "create_at")
     @Temporal(TemporalType.DATE)
     private Date createAt;
 
@@ -61,7 +62,8 @@ public class Consulta implements Serializable {
      private String conducta;
 
     
-     @ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.EAGER)
+     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+     @JoinColumn(name = "paciente_id")
      private Paciente paciente;
 
     public String getMotivoConsulta() {

@@ -2,12 +2,16 @@ package com.utp.proyectoBackend.ProyectoBackendClinica.models.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -56,7 +60,9 @@ public class Paciente implements Serializable {
     private String confiabilidad;
     private String servicio;
     private String lugar;
-   
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "paciente", cascade = CascadeType.ALL)
+    private List<Consulta> consultas;
 
     // Getters y Setters
 
@@ -180,12 +186,12 @@ public class Paciente implements Serializable {
         EPS = ePS;
     }
 
-    public Long getAcompañanteTelefono() {
+    public Long getAcompananteTelefono() {
         return acompananteTelefono;
     }
 
-    public void setAcompañanteTelefono(Long acompañanteTelefono) {
-        this.acompananteTelefono = acompañanteTelefono;
+    public void setAcompananteTelefono(Long acompananteTelefono) {
+        this.acompananteTelefono = acompananteTelefono;
     }
 
     public String getConfiabilidad() {
@@ -211,6 +217,14 @@ public class Paciente implements Serializable {
     public void setLugar(String lugar) {
         this.lugar = lugar;
     }
+
+    public List<Consulta> getConsultas() {
+		return consultas;
+	}
+
+	public void setConsultas(List<Consulta> consultas) {
+		this.consultas = consultas;
+	}
 
   
 
