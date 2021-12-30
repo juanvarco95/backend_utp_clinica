@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "pacientes")
 public class Paciente implements Serializable {
@@ -60,12 +62,14 @@ public class Paciente implements Serializable {
     private String confiabilidad;
     private String servicio;
     private String lugar;
-    
+
+    @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "paciente", cascade = CascadeType.ALL)
     private List<Consulta> consultas;
 
     // Getters y Setters
 
+    
     public Long getId() {
         return id;
     }

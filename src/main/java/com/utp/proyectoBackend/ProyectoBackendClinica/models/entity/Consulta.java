@@ -17,12 +17,14 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "consulta")
 public class Consulta implements Serializable {
 
     @Id
-    @Column(name = "ID")
+    // @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
@@ -62,9 +64,12 @@ public class Consulta implements Serializable {
      private String conducta;
 
     
-     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-     @JoinColumn(name = "paciente_id")
+     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+     @JoinColumn(name = "paciente_id", nullable = false)
+     @JsonBackReference
      private Paciente paciente;
+
+    
 
     public String getMotivoConsulta() {
         return motivoConsulta;
